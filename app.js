@@ -38,11 +38,11 @@ const Leaders=require('./models/leaders');
 const Favourite=require('./models/favourite');
 
 const url = config.mongoUrl;
-// const connect = mongoose.connect(url);
+const connect = mongoose.connect(url);
 
-// connect.then((db) => {
-//     console.log("Connected correctly to server");
-// }, (err) => { console.log(err); });
+connect.then((db) => {
+    console.log("Connected correctly to server");
+}, (err) => { console.log(err); });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

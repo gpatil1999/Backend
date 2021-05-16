@@ -37,12 +37,22 @@ const Promotions=require('./models/promotions');
 const Leaders=require('./models/leaders');
 const Favourite=require('./models/favourite');
 
-const url = config.mongoUrl;
-const connect = mongoose.connect(url);
+const MongoClient = require('mongodb').MongoClient;
 
-connect.then((db) => {
-    console.log("Connected correctly to server");
-}, (err) => { console.log(err); });
+const url = config.mongoUrl;
+const connectionParams={
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true, 
+  autoIndex: false
+}
+mongoose.connect(url,connectionParams)
+  .then( () => {
+      console.log('Connected to database ')
+  })
+  .catch( (err) => {
+      console.error(`Error connecting to the database. \n${err}`);
+  })
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

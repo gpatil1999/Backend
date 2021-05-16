@@ -8,6 +8,7 @@ var FileStore=require('session-file-store')(session);
 var passport = require('passport');
 var authenticate = require('./authenticate');
 var config = require('./config');
+var cors = require('./routes/cors')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -36,16 +37,28 @@ const Promotions=require('./models/promotions');
 const Leaders=require('./models/leaders');
 const Favourite=require('./models/favourite');
 
-const url = config.mongoUrl;
-const connect = mongoose.connect(url);
+const MongoClient = require('mongodb').MongoClient;
 
-connect.then((db) => {
-    console.log("Connected correctly to server");
-}, (err) => { console.log(err); });
+const url = config.mongoUrl;
+const connectionParams={
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true, 
+  autoIndex: false
+}
+mongoose.connect(url,connectionParams)
+  .then( () => {
+      console.log('Connected to database ')
+  })
+  .catch( (err) => {
+      console.error(`Error connecting to the database. \n${err}`);
+  })
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+app.use(cors.corsWithOptions);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -82,5 +95,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
